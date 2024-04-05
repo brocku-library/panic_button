@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <title>Asset Tag Lookup</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+    <body>
+        <div class="container">
+            <h4 style="padding-top: 15px;">Enter Search Criteria (eg. asset tag, person name)</h4>
+            <form action="{{ url_for('home') }}" method="post">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="search_criteria">
+                </div>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+            {% if data != None %}
+                <h5>Possible Matches for: <b>{{ data["searched_with"] }}</b></h5>
+                <table class="table">
+                    <tbody>
+                        <thead>
+                            <th scope="col">Employee Name</th>
+                            <th scope="col">Location</th>
+                            <th scope="col">Asset Name</th>
+                            <th scope="col">Affiliation</th>
+                            <th scope="col">Device Type</th>
+                        </thead>
+                        <tbody>
+                            {% for row in data["rows"] %}
+                                <tr>
+                                    <td>{{ row["assigned_to"]["name"] }}</td>
+                                    <td>{{ row["location"]["name"] }}</td>
+                                    <td>{{ row["name"] }}</td>
+                                    <td>{{ row["company"]["name"] }}</td>
+                                    <td>{{ row["category"]["name"] }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </body>
+</html>
