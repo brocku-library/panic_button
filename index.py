@@ -4,7 +4,8 @@ import os
 
 app = Flask(__name__)
 
-access_token = os.environ["SNIPE_IT_ACCESS_TOKEN"]
+# access_token = os.environ["SNIPE_IT_ACCESS_TOKEN"]
+access_token = open("SNIPE_IT_ACCESS_TOKEN.txt", "r").readline()
 headers = {
     "Accept": "application/json",
     "Content-Type": "application/json",
@@ -23,14 +24,14 @@ def home():
 
 @app.route("/hardware")
 def all_hardwares():
-    url = "http://rtod.library.brocku.ca:3051/api/v1/hardware?limit=2&offset=0&sort=created_at&order=desc"
+    url = "http://rtod.library.brocku.ca:3051/api/v1/hardware?limit=15&offset=0&sort=created_at&order=desc"
     data = requests.get(url, headers = headers).json()
 
     return data
 
 @app.route("/hardware/<search>")
 def find_hardware(search):
-    url = "http://rtod.library.brocku.ca:3051/api/v1/hardware/?limit=2&offset=0&sort=created_at&order=desc&search={0}"
+    url = "http://rtod.library.brocku.ca:3051/api/v1/hardware/?limit=15&offset=0&sort=created_at&order=desc&search={0}"
     data = requests.get(url.format(search), headers=headers).json()
 
     return data
