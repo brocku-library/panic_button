@@ -7,7 +7,7 @@
     </head>
     <body>
         <div class="container">
-            <h4 style="padding-top: 15px;">Enter Search Criteria (eg. asset tag, person name)</h4>
+            <h4 style="padding-top: 15px;">Enter Asset Name (<i>LIBR-XXXXXXXX</i>)</h4>
             <form action="{{ url_for('home') }}" method="post">
                 <div class="form-group">
                     <input type="text" class="form-control" name="search_criteria">
@@ -16,28 +16,33 @@
             </form>
             {% if data != None %}
                 <h5>Possible Matches for: <b>{{ data["searched_with"] }}</b></h5>
-                <table class="table">
-                    <tbody>
-                        <thead>
-                            <th scope="col">Employee Name</th>
-                            <th scope="col">Location</th>
-                            <th scope="col">Asset Name</th>
-                            <th scope="col">Affiliation</th>
-                            <th scope="col">Device Type</th>
-                        </thead>
+                
+                {% if data["rows"]|length == 0 %}
+                    <div class="alert alert-info">No match found</div>
+                {% else %}
+                    <table class="table">
                         <tbody>
-                            {% for row in data["rows"] %}
-                                <tr>
-                                    <td>{{ row["assigned_to"]["name"] }}</td>
-                                    <td>{{ row["location"]["name"] }}</td>
-                                    <td>{{ row["name"] }}</td>
-                                    <td>{{ row["company"]["name"] }}</td>
-                                    <td>{{ row["category"]["name"] }}</td>
-                                </tr>
-                            {% endfor %}
+                            <thead>
+                                <th scope="col">Employee Name</th>
+                                <th scope="col">Location</th>
+                                <th scope="col">Asset Name</th>
+                                <th scope="col">Affiliation</th>
+                                <th scope="col">Device Type</th>
+                            </thead>
+                            <tbody>
+                                {% for row in data["rows"] %}
+                                    <tr>
+                                        <td>{{ row["assigned_to"]["name"] }}</td>
+                                        <td>{{ row["location"]["name"] }}</td>
+                                        <td>{{ row["name"] }}</td>
+                                        <td>{{ row["company"]["name"] }}</td>
+                                        <td>{{ row["category"]["name"] }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
                         </tbody>
-                    </tbody>
-                </table>
+                    </table>
+                {% endif %}
             {% endif %}
         </div>
     </body>

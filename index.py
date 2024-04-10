@@ -1,6 +1,7 @@
-from flask import Flask, request, render_template
-import requests
 import os
+import requests
+from waitress import serve
+from flask import Flask, request, render_template
 
 app = Flask(__name__)
 
@@ -18,7 +19,6 @@ def home():
         return render_template("home.html", data = None)
     
     data = find_hardware(request.form["search_criteria"])
-    data["searched_with"] = request.form["search_criteria"]
     
     return render_template("home.html", data = data)
 
@@ -34,5 +34,17 @@ def find_hardware(search):
     url = "http://rtod.library.brocku.ca:3051/api/v1/hardware/?limit=15&offset=0&sort=created_at&order=desc&search={0}"
     data = requests.get(url.format(search), headers=headers).json()
 
+    filtered_data = []
+    for row in data["rows"]:
+        if search and search in row["name"]:
+            filtered_data.append(row)
+    
+    data["searched_with"] = search
+    data["rows"] = filtered_data
+
     return data
 
+if __name__ == "__main__":
+    port = 8080
+    print("Running on {0}".format(port))
+    serve(app, host="127.0.0.1", port=port)
